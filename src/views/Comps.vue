@@ -8,7 +8,7 @@
         <ul>
             <div>
                 <div v-if="fData.length === 0">
-                    <p class="warringMessage">There is no competitions for now...</p>
+                    <p class="warningMessage">There is no competitions for now...</p>
                 </div>
                 <li v-else v-for="comp in fData">
                     <a :href="`https://www.worldcubeassociation.org/competitions/${comp.id}`" target="_blank">
@@ -82,7 +82,7 @@ export default{
     text-decoration: underline;
 }
 
-.warringMessage{
+.warningMessage{
     color: orange;
     font-size: 24px;
 }

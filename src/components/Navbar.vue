@@ -2,6 +2,7 @@
     <nav class="nb">
         <router-link class="nbText" to="/">WCA INFO</router-link>
         <router-link class="nbLink nbLinkFirst" to="/comps">Competitions</router-link>
+        <router-link class="nbLink" to="/stats">Account Statistics</router-link>
     </nav>
 </template>
 
