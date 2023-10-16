@@ -12,13 +12,22 @@
         </ul>
         <p class="dataTxt">Twoje wyniki:</p>
         <ul class="resultsList">
-            <li><p>{{ person.results }}</p></li>
-            <li><p>{{ resultsRemap }}</p></li>
-            <!-- <li v-for="comp in person.results">
-                <p class="dataTxt">{{ comp }}</p>
-            </li> -->
+            <li v-for="(comp, compKey) in person.results">
+                <p>Your results in {{ compKey }}:</p>
+                <ul>
+                    <li v-for="(event, eventKey) in comp">
+                        <p>Your results in {{ eventsObj[eventKey] }}:</p>
+                        <ul>
+                            <li v-for="round in event">
+                                <p>
+                                    In the {{ round.round }}. Your solves were: {{ round.solves }}. You were in {{ round.position }} position on the leaderboards. Your best solve was {{ round.best }}. Your average was {{ round.average }}
+                                </p>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </li>
         </ul>
-        
     </div>
 </template>
 
@@ -29,9 +38,31 @@ export default{
     name: 'stats',
     setup(){
         const wcaId = ref('2022arez01')
+        const eventsObj = {
+            "222": "2x2",
+            "333": "3x3",
+            "333bf": "3x3 blindfolded",
+            "333fm": "Fewest moves challenge",
+            "333mbf": "Multi-blind",
+            "333mbo": "Multi-blind",
+            "333oh": "3x3 one handed",
+            "333ft": "3x3 with feet",
+            "444": "4x4",
+            "444bf": "4x4 blindfolded",
+            "555": "5x5",
+            "555bf": "5x5 blindfolded",
+            "666": "6x6",
+            "777": "7x7",
+            "clock": "Clock",
+            "magic": "Rubik's magic",
+            "mmagic": "Master magic",
+            "minx": "Megaminx",
+            "pyram": "Pyraminx",
+            "skewb": "Skweb",
+            "sq1": "Square-1"
+        }
         let person = ref({});
         let isPersonData = ref({bool: false});
-        let resultsRemap = ref({});
 
         const fetchData = async () => {
             isPersonData.value.bool = false;
@@ -45,29 +76,19 @@ export default{
             fetchData().then((fetchedData) => {
                 person.value = fetchedData;
                 isPersonData.value.bool = true;
-                remapResultObj();
+                console.log(person.value)
             })
-        }
-
-        const remapResultObj = () => {
-            resultsRemap.value = {}
-
-            for(let comp in person.value.results){
-                const events = Object.entries(person.value.results[comp])
-                console.log(events)
-    }
-            
-            console.log(resultsRemap.value)
         }
 
         return{
             // vars
-            person, isPersonData, wcaId, resultsRemap,
+            person, isPersonData, wcaId, eventsObj,
             // functions
-            displayData, remapResultObj
+            displayData
             // packages
         }
     }
+    
 }
 </script>
 
