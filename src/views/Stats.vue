@@ -59,9 +59,19 @@ export default{
         }
 
         function formatTime(time){
-            // time = time.match(/.{1,2}/g);
             time = time.toString()
 
+            // DNF, DNS check
+            if(time === "0"){
+                time = 'DNS'
+                return time
+            }
+            if(time === "-1"){
+                time = 'DNF'
+                return time
+            }
+
+            // Actual time formatting
             if(time.length === 6){
                 time = `${time[0]}${time[1]}:${time[2]}${time[3]}.${time[4]}${time[5]}` 
             }
@@ -75,7 +85,7 @@ export default{
                 time = `${time[0]}.${time[1]}${time[2]}` 
             }
             if(time.length === 2){
-                time = `0.${time[0]}${time[1]}` 
+                time = `0.${time[0]}${time[1]}`
             }
             
             return time;
