@@ -23,7 +23,7 @@
 
 <script>
 import { ref } from 'vue';
-import { countries } from '../js/countries.js'
+import { countries } from '../js/objects.js'
 
 export default{
     name: "comps",

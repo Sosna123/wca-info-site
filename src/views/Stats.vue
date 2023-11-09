@@ -20,7 +20,7 @@
                         <ul>
                             <li v-for="round in event">
                                 <p>
-                                    In the {{ round.round }}. Your solves were: {{ round.solves }}. You were in {{ round.position }} position on the leaderboards. Your best solve was {{ round.best }}. Your average was {{ round.average }}
+                                    In the {{ round.round }}, your average was {{ formatTime(round.average) }} Your solves were: {{ displayTimeArray(round.solves) }}. You were in {{ round.position }} position on the leaderboards. Your best solve was {{ formatTime(round.best) }}.
                                 </p>
                             </li>
                         </ul>
@@ -33,34 +33,12 @@
 
 <script>
 import { ref } from 'vue';
+import { eventsObj } from '../js/objects.js'
 
 export default{
     name: 'stats',
     setup(){
         const wcaId = ref('2022arez01')
-        const eventsObj = {
-            "222": "2x2",
-            "333": "3x3",
-            "333bf": "3x3 blindfolded",
-            "333fm": "Fewest moves challenge",
-            "333mbf": "Multi-blind",
-            "333mbo": "Multi-blind",
-            "333oh": "3x3 one handed",
-            "333ft": "3x3 with feet",
-            "444": "4x4",
-            "444bf": "4x4 blindfolded",
-            "555": "5x5",
-            "555bf": "5x5 blindfolded",
-            "666": "6x6",
-            "777": "7x7",
-            "clock": "Clock",
-            "magic": "Rubik's magic",
-            "mmagic": "Master magic",
-            "minx": "Megaminx",
-            "pyram": "Pyraminx",
-            "skewb": "Skweb",
-            "sq1": "Square-1"
-        }
         let person = ref({});
         let isPersonData = ref({bool: false});
 
@@ -80,11 +58,54 @@ export default{
             })
         }
 
+        function formatTime(time){
+            // time = time.match(/.{1,2}/g);
+            time = time.toString()
+
+            if(time.length === 6){
+                time = `${time[0]}${time[1]}:${time[2]}${time[3]}.${time[4]}${time[5]}` 
+            }
+            if(time.length === 5){
+                time = `${time[0]}:${time[1]}${time[2]}.${time[3]}${time[4]}` 
+            }
+            if(time.length === 4){
+                time = `${time[0]}${time[1]}.${time[2]}${time[3]}` 
+            }
+            if(time.length === 3){
+                time = `${time[0]}.${time[1]}${time[2]}` 
+            }
+            if(time.length === 2){
+                time = `0.${time[0]}${time[1]}` 
+            }
+            
+            return time;
+        }
+
+        function formatMultiple(times){
+            let results = [];
+            for(let time of times){
+                results.push(formatTime(time))
+            }
+            
+            return results
+        }
+
+        function displayTimeArray(arr){
+            let finalStr = ''
+            arr = formatMultiple(arr)
+            
+            for(let i = 0; i < arr.length; i++){
+                finalStr += `${arr[i]}; `
+            }
+
+            return finalStr.slice(0, -2)
+        }
+
         return{
             // vars
             person, isPersonData, wcaId, eventsObj,
             // functions
-            displayData
+            displayData, formatTime, formatMultiple, displayTimeArray
             // packages
         }
     }
