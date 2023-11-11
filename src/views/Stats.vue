@@ -37,12 +37,12 @@
                                 <!--* fmc display -->
                                 <div v-if="eventsObj[event.eventId] === 'Fewest moves challenge'">
                                     <li>Your best single is: {{ event.best }}:</li>
-                                    <li>Jest on na {{ event.rank.world }} miejscu w rankingu światowym, {{ event.rank.continent }} miejscu w rankingu kontynentalnym i {{ event.rank.country }} miejscu w rankingu krajowym</li>
+                                    <li>Your best solve is in {{ event.rank.world }} place in world rankings, in {{ event.rank.continent }} place in continental ranking, in {{ event.rank.country }} place in country ranking</li>
                                 </div>
                                 <!--* other -->
                                 <div v-else>
                                     <li>Your best single is: {{ formatTime(event.best) }}:</li>
-                                    <li>Jest on na {{ event.rank.world }} miejscu w rankingu światowym, {{ event.rank.continent }} miejscu w rankingu kontynentalnym i {{ event.rank.country }} miejscu w rankingu krajowym</li>
+                                    <li>Your best solve is in {{ event.rank.world }} place in world rankings, in {{ event.rank.continent }} place in continental ranking, in {{ event.rank.country }} place in country ranking</li>
                                 </div>
                             </ul>
                             <!--! averages -->
@@ -50,12 +50,12 @@
                                 <!--* fmc display -->
                                 <div v-if="eventsObj[event.eventId] === 'Fewest moves challenge'">
                                     <li>Your best average is: {{ formatTime(event.best) }}:</li>
-                                    <li>Jest on na {{ event.rank.world }} miejscu w rankingu światowym, {{ event.rank.continent }} miejscu w rankingu kontynentalnym i {{ event.rank.country }} miejscu w rankingu krajowym</li>
+                                    <li>Your best solve is in {{ event.rank.world }} place in world rankings, in {{ event.rank.continent }} place in continental ranking, in {{ event.rank.country }} place in country ranking</li>
                                 </div>
                                 <!--* other -->
                                 <div v-else>
                                     <li>Your best average is: {{ formatTime(event.best) }}:</li>
-                                    <li>Jest on na {{ event.rank.world }} miejscu w rankingu światowym, {{ event.rank.continent }} miejscu w rankingu kontynentalnym i {{ event.rank.country }} miejscu w rankingu krajowym</li>
+                                    <li>Your best solve is in {{ event.rank.world }} place in world rankings, in {{ event.rank.continent }} place in continental ranking, in {{ event.rank.country }} place in country ranking</li>
                                 </div>
                             </ul>
                         </li>
