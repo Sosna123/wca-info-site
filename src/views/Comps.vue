@@ -1,22 +1,20 @@
 <template>
-    <div class="compsContainer">
-        <select name="countrySelect" v-model="countryTag">
+    <div class="container-xl p-lg-3">
+        <select name="countrySelect" class="form-select d-inline" v-model="countryTag">
             <option disabled value="">Please select a country</option>
             <option v-for="country in countries" :value="country.iso2Code">{{ country.name }}</option>
         </select>
-        <button @click="displayData">Search for competitions</button>
-        <ul>
-            <div>
-                <div v-if="fData.length === 0">
-                    <p class="warningMessage">There is no competitions for now...</p>
-                </div>
-                <li v-else v-for="comp in fData">
-                    <a :href="`https://www.worldcubeassociation.org/competitions/${comp.id}`" target="_blank">
-                        <p class="compName compTxt">{{ comp.name }}</p>
-                    </a>
-                    <p class="compTxt">will be in {{ comp.city }} at {{ comp.venue.address }}</p>
-                </li>
+        <button @click="displayData" class="btn btn-outline-success d-inline w-100">Search for competitions</button>
+        <div v-if="fData.length === 0">
+                <p class="lead alert alert-warning mt-5" role="alert">There is no competitions for now...</p>
             </div>
+        <ul v-else class="list-group list-group-flush mt-5">
+            <li v-for="comp in fData" class="list-group-item">
+                <a :href="`https://www.worldcubeassociation.org/competitions/${comp.id}`" target="_blank">
+                    <p class="display-6 text-dark d-inline-block me-2 text-decoration-underline ">{{ comp.name }}</p>
+                </a>
+                <p class="text-dark d-inline-block lead fs-4">will be in {{ comp.city }} at {{ comp.venue.address }}</p>
+            </li>
         </ul>
     </div>
 </template>
@@ -39,12 +37,20 @@ export default{
         
 
         const fetchData = async () => {
+            if(countryTag.value === ''){
+                return
+            }
+
             const promise = await fetch(`https://raw.githubusercontent.com/robiningelbrecht/wca-rest-api/master/api/competitions/${countryTag.value.toUpperCase()}.json`)
             const fetchedData = promise.json();
             return fetchedData;
         }
 
         const displayData = () => {
+            if(countryTag.value === ''){
+                return
+            }
+            
             fetchData().then((fetchedData) => {
                 data = fetchedData;
                 
@@ -70,7 +76,7 @@ export default{
 </script>
 
 <style>
-.compTxt{
+/* .compTxt{
     color: white;
     display: inline-block;
 }
@@ -109,5 +115,5 @@ select{
 
 .compsContainer{
     margin: 0 0 0 20px;
-}
+} */
 </style>
