@@ -8,7 +8,7 @@
     
         <!--* alert -->
         <div v-if="!isPersonData.bool">
-            <p class="lead alert alert-warning mt-5" role="alert">Wrong WCA id</p>
+            <p class="lead alert alert-danger mt-5" role="alert">Wrong WCA ID</p>
         </div>
 
         <!--* data -->
@@ -17,7 +17,7 @@
             <p class="display-5">{{ person.name }} - <a :href="`https://www.worldcubeassociation.org/persons/${person.id}`" target="_blank" class="text-dark">{{ person.id }}</a></p>
             
             <!--* comps someone took part in -->
-            <p class="fs-4 lead">Byłeś na {{ person.numberOfCompetitions }} zawodach takich jak:</p>
+            <p class="fs-4 lead">You were taking part in {{ person.numberOfCompetitions }} competitions like:</p>
             <ul class="fs-5 lead">
                 <li v-for="comp in person.competitionIds">
                     <p>{{ comp }}</p>
@@ -25,23 +25,23 @@
             </ul>
 
             <!--* rank -->
-            <p class="fs-4 lead">Twoje rankingi:</p>
+            <p class="fs-4 lead"> Your rankings:</p>
             <ul class="fs-5 lead">
                 <li v-for="(rank, rankKey) in person.rank">
-                    <p v-if="rankKey === 'singles'">Pojedyńcze ułożenia:</p>
-                    <p v-else>Średnie:</p>
+                    <p v-if="rankKey === 'singles'">Singles:</p>
+                    <p v-else>Averages:</p>
                     <ul class="fs-5 lead">
                         <li v-for="event in rank">{{ eventsObj[event.eventId] }}:  
                             <!--! singles -->
                             <ul v-if="rankKey === 'singles'">
                                 <!--* fmc display -->
                                 <div v-if="eventsObj[event.eventId] === 'Fewest moves challenge'">
-                                    <li>Twoje najlepsze ułożenie to: {{ event.best }}:</li>
+                                    <li>Your best single is: {{ event.best }}:</li>
                                     <li>Jest on na {{ event.rank.world }} miejscu w rankingu światowym, {{ event.rank.continent }} miejscu w rankingu kontynentalnym i {{ event.rank.country }} miejscu w rankingu krajowym</li>
                                 </div>
                                 <!--* other -->
                                 <div v-else>
-                                    <li>Twoje najlepsze ułożenie to: {{ formatTime(event.best) }}:</li>
+                                    <li>Your best single is: {{ formatTime(event.best) }}:</li>
                                     <li>Jest on na {{ event.rank.world }} miejscu w rankingu światowym, {{ event.rank.continent }} miejscu w rankingu kontynentalnym i {{ event.rank.country }} miejscu w rankingu krajowym</li>
                                 </div>
                             </ul>
@@ -49,12 +49,12 @@
                             <ul v-else>
                                 <!--* fmc display -->
                                 <div v-if="eventsObj[event.eventId] === 'Fewest moves challenge'">
-                                    <li>Twoja najlepsza średnia to: {{ formatTime(event.best) }}:</li>
+                                    <li>Your best average is: {{ formatTime(event.best) }}:</li>
                                     <li>Jest on na {{ event.rank.world }} miejscu w rankingu światowym, {{ event.rank.continent }} miejscu w rankingu kontynentalnym i {{ event.rank.country }} miejscu w rankingu krajowym</li>
                                 </div>
                                 <!--* other -->
                                 <div v-else>
-                                    <li>Twoja najlepsza średnia to: {{ formatTime(event.best) }}:</li>
+                                    <li>Your best average is: {{ formatTime(event.best) }}:</li>
                                     <li>Jest on na {{ event.rank.world }} miejscu w rankingu światowym, {{ event.rank.continent }} miejscu w rankingu kontynentalnym i {{ event.rank.country }} miejscu w rankingu krajowym</li>
                                 </div>
                             </ul>
@@ -64,7 +64,7 @@
             </ul>
 
             <!--* results -->
-            <p class="fs-4 lead">Twoje wyniki:</p>
+            <p class="fs-4 lead">Your results:</p>
             <ul class="fs-5 lead">
                 <li v-for="(comp, compKey) in person.results">
                     <p class="fs-5 lead">Your results in {{ compKey }}:</p>

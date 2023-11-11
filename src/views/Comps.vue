@@ -1,14 +1,21 @@
 <template>
     <div class="container-xl p-lg-3">
+
         <!--* form -->
-        <select name="countrySelect" class="form-select d-inline" v-model="countryTag">
-            <option disabled value="">Please select a country</option>
-            <option v-for="country in countries" :value="country.iso2Code">{{ country.name }}</option>
-        </select>
-        <button @click="displayData" class="btn btn-outline-success d-inline w-100">Search for competitions</button>
+        <div class="row g-3 align-items-center">
+            <div class="col-lg-6">
+                <select name="countrySelect" class="form-select d-inline" v-model="countryTag">
+                    <option disabled value="">Please select a country</option>
+                    <option v-for="country in countries" :value="country.iso2Code">{{ country.name }}</option>
+                </select>
+            </div>
+            <div class="col-lg-6">
+                <button @click="displayData" class="btn btn-outline-success">Search for competitions</button>
+            </div>
+        </div>
         <!--* alert -->
         <div v-if="fData.length === 0">
-            <p class="lead alert alert-warning mt-5" role="alert">There is no competitions for now...</p>
+            <p class="lead alert alert-info mt-5" role="alert">There is no competitions for now...</p>
         </div>
         <!--* comps -->
         <ul v-else class="list-group list-group-flush mt-5">
