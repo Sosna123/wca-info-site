@@ -1,19 +1,22 @@
 <template>
     <div class="container-xl p-lg-3">
+        <!--* form -->
         <div class="input-group">
             <input type="text" v-model="wcaId" placeholder="Type in your wca id" class="form-control w-50">
             <button @click="displayData()" class="form-control btn btn-outline-success">Click me</button>
         </div>
     
+        <!--* alert -->
         <div v-if="!isPersonData.bool">
             <p class="lead alert alert-warning mt-5" role="alert">Wrong WCA id</p>
         </div>
 
+        <!--* data -->
         <div v-if="isPersonData.bool" class="mt-5">
-            <!-- header -->
+            <!--* header -->
             <p class="display-5">{{ person.name }} - <a :href="`https://www.worldcubeassociation.org/persons/${person.id}`" target="_blank" class="text-dark">{{ person.id }}</a></p>
             
-            <!-- comps someone has been -->
+            <!--* comps someone took part in -->
             <p class="fs-4 lead">Byłeś na {{ person.numberOfCompetitions }} zawodach takich jak:</p>
             <ul class="fs-5 lead">
                 <li v-for="comp in person.competitionIds">
@@ -21,7 +24,7 @@
                 </li>
             </ul>
 
-            <!-- rank -->
+            <!--* rank -->
             <p class="fs-4 lead">Twoje rankingi:</p>
             <ul class="fs-5 lead">
                 <li v-for="(rank, rankKey) in person.rank">
@@ -42,7 +45,7 @@
                 </li>
             </ul>
 
-            <!-- results -->
+            <!--* results -->
             <p class="fs-4 lead">Twoje wyniki:</p>
             <ul class="fs-5 lead">
                 <li v-for="(comp, compKey) in person.results">
@@ -79,18 +82,16 @@ export default{
         let person = ref({});
         let isPersonData = ref({bool: false});
 
+        //* fetch data
         const fetchData = async () => {
-            try{
-                isPersonData.value.bool = false;
-                const promise = await fetch(`https://raw.githubusercontent.com/robiningelbrecht/wca-rest-api/master/api/persons/${wcaId.value.toUpperCase()}.json`)
-                const fetchedData = promise.json();
-                wcaId.value = ''
-                return fetchedData;
-            }catch{
-                return 'error'
-            }
+            isPersonData.value.bool = false;
+            const promise = await fetch(`https://raw.githubusercontent.com/robiningelbrecht/wca-rest-api/master/api/persons/${wcaId.value.toUpperCase()}.json`)
+            const fetchedData = promise.json().catch(e => {return 'error'});
+            wcaId.value = ''
+            return fetchedData;
         }
 
+        //* display data
         const displayData = () => {
             fetchData().then((fetchedData) => {
                 if(fetchedData === 'error'){
@@ -98,12 +99,12 @@ export default{
                 }else{
                     person.value = fetchedData;
                     isPersonData.value.bool = true;
-                    console.log(person.value)
                 }
                 
             })
         }
 
+        // time formatting
         function formatTime(time, type='normal'){
             time = time.toString()
             if(type === 'normal'){
@@ -155,6 +156,7 @@ export default{
             return results
         }
 
+        //* displaying arrays
         function displayTimeArray(arr){
             let finalStr = ''
             arr = formatMultiple(arr)
@@ -164,11 +166,11 @@ export default{
         }
 
         return{
-            // vars
+            //* vars
             person, isPersonData, wcaId, eventsObj,
-            // functions
+            //* functions
             displayData, formatTime, formatMultiple, displayTimeArray
-            // packages
+            //* packages
         }
     }
     
@@ -176,13 +178,5 @@ export default{
 </script>
 
 <style>
-/* .dataTxt{
-    color: white;
-    font-size: 16px;
-    margin-left: 10px;
-}
 
-.dataTxtHeader{
-    font-size: 24px;
-} */
 </style>

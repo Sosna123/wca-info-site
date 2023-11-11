@@ -6,6 +6,7 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav">
+                <!--* links -->
                 <li class="nav-item active">
                     <router-link class="nav-link fs-3 fw-light" :class="{active: checkRoute('comps')}" to="/comps">Competitions</router-link>
                 </li>
