@@ -19,9 +19,12 @@
                         <p>Your results in {{ eventsObj[eventKey] }}:</p>
                         <ul>
                             <li v-for="round in event">
-                                <p>
-                                    In the {{ round.round }}, your average was {{ formatTime(round.average) }} Your solves were: {{ displayTimeArray(round.solves) }}. You were in {{ round.position }} position on the leaderboards. Your best solve was {{ formatTime(round.best) }}.
-                                </p>
+                                <div v-if="eventsObj[eventKey] === 'Fewest moves challenge' || eventsObj[eventKey] === 'Multi-blind'">
+                                    <p>In the {{ round.round }}, your average was {{ round.average }} Your solves were: {{ round.solves }}. You were in {{ round.position }} position on the leaderboards. Your best solve was {{ formatTime(round.best) }}.</p>
+                                </div>
+                                <div>
+                                    <p>In the {{ round.round }}, your average was {{ formatTime(round.average) }} Your solves were: {{ displayTimeArray(round.solves) }}. You were in {{ round.position }} position on the leaderboards. Your best solve was {{ formatTime(round.best) }}.</p>
+                                </div>
                             </li>
                         </ul>
                     </li>
@@ -58,34 +61,43 @@ export default{
             })
         }
 
-        function formatTime(time){
+        function formatTime(time, type='normal'){
             time = time.toString()
+            if(type === 'normal'){
+                // DNF, DNS check
+                if(time === "0"){
+                    return 'DNS'
+                }
+                if(time === "-1"){
+                    return 'DNF'
+                }
+    
+                // Actual time formatting
+                if(time.length === 6){
+                    time = `${time[0]}${time[1]}:${time[2]}${time[3]}.${time[4]}${time[5]}` 
+                }
+                if(time.length === 5){
+                    time = `${time[0]}:${time[1]}${time[2]}.${time[3]}${time[4]}` 
+                }
+                if(time.length === 4){
+                    time = `${time[0]}${time[1]}.${time[2]}${time[3]}` 
+                }
+                if(time.length === 3){
+                    time = `${time[0]}.${time[1]}${time[2]}` 
+                }
+                if(time.length === 2){
+                    time = `0.${time[0]}${time[1]}`
+                }
+            }
 
-            // DNF, DNS check
-            if(time === "0"){
-                time = 'DNS'
-                return time
-            }
-            if(time === "-1"){
-                time = 'DNF'
-                return time
-            }
-
-            // Actual time formatting
-            if(time.length === 6){
-                time = `${time[0]}${time[1]}:${time[2]}${time[3]}.${time[4]}${time[5]}` 
-            }
-            if(time.length === 5){
-                time = `${time[0]}:${time[1]}${time[2]}.${time[3]}${time[4]}` 
-            }
-            if(time.length === 4){
-                time = `${time[0]}${time[1]}.${time[2]}${time[3]}` 
-            }
-            if(time.length === 3){
-                time = `${time[0]}.${time[1]}${time[2]}` 
-            }
-            if(time.length === 2){
-                time = `0.${time[0]}${time[1]}`
+            if(type === 'fmc'){
+                // DNF, DNS check
+                if(time === "0"){
+                    return 'DNS'
+                }
+                if(time === "-1"){
+                    return 'DNF'
+                }
             }
             
             return time;
@@ -103,12 +115,9 @@ export default{
         function displayTimeArray(arr){
             let finalStr = ''
             arr = formatMultiple(arr)
-            
-            for(let i = 0; i < arr.length; i++){
-                finalStr += `${arr[i]}; `
-            }
 
-            return finalStr.slice(0, -2)
+            finalStr = arr.join('; ')
+            return finalStr
         }
 
         return{
