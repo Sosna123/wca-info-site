@@ -1,19 +1,6 @@
 # wca-info-site
 
-## Project setup
-```
-npm install
-```
+## Site, that displays information about wca competitions and competitors
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
-
-### Compiles and minifies for production
-```
-npm run build
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+You can check your statistics, like competitions you've been to, your records and your results.
+Also you can check upcoming competitions in various countries.
