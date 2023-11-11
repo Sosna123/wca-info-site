@@ -1,36 +1,70 @@
 <template>
-    <input type="text" v-model="wcaId" placeholder="Type in your wca id">
-    <button @click="displayData()">Click me</button>
+    <div class="container-xl p-lg-3">
+        <div class="input-group">
+            <input type="text" v-model="wcaId" placeholder="Type in your wca id" class="form-control w-50">
+            <button @click="displayData()" class="form-control btn btn-outline-success">Click me</button>
+        </div>
+    
+        <div v-if="!isPersonData.bool">
+            <p class="lead alert alert-warning mt-5" role="alert">Wrong WCA id</p>
+        </div>
 
-    <div class="info" v-if="isPersonData.bool">
-        <p class="dataTxt dataTxtHeader">{{ person.name }} - {{ person.id }}</p>
-        <p class="dataTxt">Byłeś na {{ person.numberOfCompetitions }} zawodach takich jak:</p>
-        <ul class="competitionList">
-            <li v-for="comp in person.competitionIds">
-                <p>{{ comp }}</p>
-            </li>
-        </ul>
-        <p class="dataTxt">Twoje wyniki:</p>
-        <ul class="resultsList">
-            <li v-for="(comp, compKey) in person.results">
-                <p>Your results in {{ compKey }}:</p>
-                <ul>
-                    <li v-for="(event, eventKey) in comp">
-                        <p>Your results in {{ eventsObj[eventKey] }}:</p>
-                        <ul>
-                            <li v-for="round in event">
-                                <div v-if="eventsObj[eventKey] === 'Fewest moves challenge' || eventsObj[eventKey] === 'Multi-blind'">
-                                    <p>In the {{ round.round }}, your average was {{ round.average }} Your solves were: {{ round.solves }}. You were in {{ round.position }} position on the leaderboards. Your best solve was {{ formatTime(round.best) }}.</p>
-                                </div>
-                                <div>
-                                    <p>In the {{ round.round }}, your average was {{ formatTime(round.average) }} Your solves were: {{ displayTimeArray(round.solves) }}. You were in {{ round.position }} position on the leaderboards. Your best solve was {{ formatTime(round.best) }}.</p>
-                                </div>
-                            </li>
-                        </ul>
-                    </li>
-                </ul>
-            </li>
-        </ul>
+        <div v-if="isPersonData.bool" class="mt-5">
+            <!-- header -->
+            <p class="display-5">{{ person.name }} - <a :href="`https://www.worldcubeassociation.org/persons/${person.id}`" target="_blank" class="text-dark">{{ person.id }}</a></p>
+            
+            <!-- comps someone has been -->
+            <p class="fs-4 lead">Byłeś na {{ person.numberOfCompetitions }} zawodach takich jak:</p>
+            <ul class="fs-5 lead">
+                <li v-for="comp in person.competitionIds">
+                    <p>{{ comp }}</p>
+                </li>
+            </ul>
+
+            <!-- rank -->
+            <p class="fs-4 lead">Twoje rankingi:</p>
+            <ul class="fs-5 lead">
+                <li v-for="(rank, rankKey) in person.rank">
+                    <p v-if="rankKey === 'singles'">Pojedyńcze ułożenia:</p>
+                    <p v-else>Średnie:</p>
+                    <ul class="fs-5 lead">
+                        <li v-for="event in rank">{{ eventsObj[event.eventId] }}:  
+                            <ul v-if="rankKey === 'singles'">
+                                <li>Twój najlepszy czas to: {{ formatTime(event.best) }}:</li>
+                                <li>Jest on na {{ event.rank.world }} miejscu w rankingu światowym, {{ event.rank.continent }} miejscu w rankingu kontynentalnym i {{ event.rank.country }} miejscu w rankingu krajowym</li>
+                            </ul>
+                            <ul v-else>
+                                <li>Twoja najlepsza średnia to: {{ formatTime(event.best) }}:</li>
+                                <li>Jest on na {{ event.rank.world }} miejscu w rankingu światowym, {{ event.rank.continent }} miejscu w rankingu kontynentalnym i {{ event.rank.country }} miejscu w rankingu krajowym</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+
+            <!-- results -->
+            <p class="fs-4 lead">Twoje wyniki:</p>
+            <ul class="fs-5 lead">
+                <li v-for="(comp, compKey) in person.results">
+                    <p class="fs-5 lead">Your results in {{ compKey }}:</p>
+                    <ul>
+                        <li v-for="(event, eventKey) in comp">
+                            <p class="fs-5 lead">Your results in {{ eventsObj[eventKey] }}:</p>
+                            <ul>
+                                <li v-for="round in event">
+                                    <!-- <div v-if="eventsObj[eventKey] === 'Fewest moves challenge' || eventsObj[eventKey] === 'Multi-blind'">
+                                        <p class="fs-5 lead">In the {{ round.round }}, your average was {{ round.average }} Your solves were: {{ round.solves }}. You were in {{ round.position }} position on the leaderboards. Your best solve was {{ formatTime(round.best) }}.</p>
+                                    </div> -->
+                                    <div>
+                                        <p class="fs-5 lead">In the {{ round.round }}, your average was {{ formatTime(round.average) }} Your solves were: {{ displayTimeArray(round.solves) }}. You were in {{ round.position }} position on the leaderboards. Your best solve was {{ formatTime(round.best) }}.</p>
+                                    </div>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
     </div>
 </template>
 
@@ -46,18 +80,27 @@ export default{
         let isPersonData = ref({bool: false});
 
         const fetchData = async () => {
-            isPersonData.value.bool = false;
-            const promise = await fetch(`https://raw.githubusercontent.com/robiningelbrecht/wca-rest-api/master/api/persons/${wcaId.value.toUpperCase()}.json`)
-            const fetchedData = promise.json();
-            wcaId.value = ''
-            return fetchedData;
+            try{
+                isPersonData.value.bool = false;
+                const promise = await fetch(`https://raw.githubusercontent.com/robiningelbrecht/wca-rest-api/master/api/persons/${wcaId.value.toUpperCase()}.json`)
+                const fetchedData = promise.json();
+                wcaId.value = ''
+                return fetchedData;
+            }catch{
+                return 'error'
+            }
         }
 
         const displayData = () => {
             fetchData().then((fetchedData) => {
-                person.value = fetchedData;
-                isPersonData.value.bool = true;
-                console.log(person.value)
+                if(fetchedData === 'error'){
+                    isPersonData.value.bool = false;
+                }else{
+                    person.value = fetchedData;
+                    isPersonData.value.bool = true;
+                    console.log(person.value)
+                }
+                
             })
         }
 
@@ -133,7 +176,7 @@ export default{
 </script>
 
 <style>
-.dataTxt{
+/* .dataTxt{
     color: white;
     font-size: 16px;
     margin-left: 10px;
@@ -141,5 +184,5 @@ export default{
 
 .dataTxtHeader{
     font-size: 24px;
-}
+} */
 </style>
