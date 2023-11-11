@@ -32,13 +32,31 @@
                     <p v-else>Średnie:</p>
                     <ul class="fs-5 lead">
                         <li v-for="event in rank">{{ eventsObj[event.eventId] }}:  
+                            <!--! singles -->
                             <ul v-if="rankKey === 'singles'">
-                                <li>Twój najlepszy czas to: {{ formatTime(event.best) }}:</li>
-                                <li>Jest on na {{ event.rank.world }} miejscu w rankingu światowym, {{ event.rank.continent }} miejscu w rankingu kontynentalnym i {{ event.rank.country }} miejscu w rankingu krajowym</li>
+                                <!--* fmc display -->
+                                <div v-if="eventsObj[event.eventId] === 'Fewest moves challenge'">
+                                    <li>Twoje najlepsze ułożenie to: {{ event.best }}:</li>
+                                    <li>Jest on na {{ event.rank.world }} miejscu w rankingu światowym, {{ event.rank.continent }} miejscu w rankingu kontynentalnym i {{ event.rank.country }} miejscu w rankingu krajowym</li>
+                                </div>
+                                <!--* other -->
+                                <div v-else>
+                                    <li>Twoje najlepsze ułożenie to: {{ formatTime(event.best) }}:</li>
+                                    <li>Jest on na {{ event.rank.world }} miejscu w rankingu światowym, {{ event.rank.continent }} miejscu w rankingu kontynentalnym i {{ event.rank.country }} miejscu w rankingu krajowym</li>
+                                </div>
                             </ul>
+                            <!--! averages -->
                             <ul v-else>
-                                <li>Twoja najlepsza średnia to: {{ formatTime(event.best) }}:</li>
-                                <li>Jest on na {{ event.rank.world }} miejscu w rankingu światowym, {{ event.rank.continent }} miejscu w rankingu kontynentalnym i {{ event.rank.country }} miejscu w rankingu krajowym</li>
+                                <!--* fmc display -->
+                                <div v-if="eventsObj[event.eventId] === 'Fewest moves challenge'">
+                                    <li>Twoja najlepsza średnia to: {{ formatTime(event.best) }}:</li>
+                                    <li>Jest on na {{ event.rank.world }} miejscu w rankingu światowym, {{ event.rank.continent }} miejscu w rankingu kontynentalnym i {{ event.rank.country }} miejscu w rankingu krajowym</li>
+                                </div>
+                                <!--* other -->
+                                <div v-else>
+                                    <li>Twoja najlepsza średnia to: {{ formatTime(event.best) }}:</li>
+                                    <li>Jest on na {{ event.rank.world }} miejscu w rankingu światowym, {{ event.rank.continent }} miejscu w rankingu kontynentalnym i {{ event.rank.country }} miejscu w rankingu krajowym</li>
+                                </div>
                             </ul>
                         </li>
                     </ul>
@@ -55,10 +73,12 @@
                             <p class="fs-5 lead">Your results in {{ eventsObj[eventKey] }}:</p>
                             <ul>
                                 <li v-for="round in event">
-                                    <!-- <div v-if="eventsObj[eventKey] === 'Fewest moves challenge' || eventsObj[eventKey] === 'Multi-blind'">
-                                        <p class="fs-5 lead">In the {{ round.round }}, your average was {{ round.average }} Your solves were: {{ round.solves }}. You were in {{ round.position }} position on the leaderboards. Your best solve was {{ formatTime(round.best) }}.</p>
-                                    </div> -->
-                                    <div>
+                                    <!--* fmc -->
+                                    <div v-if="eventsObj[eventKey] === 'Fewest moves challenge'">
+                                        <p class="fs-5 lead">In the {{ round.round }}, your average was {{ formatTime(round.average) }} Your solves were: {{ displayTimeArray(round.solves, 'fmc') }}. You were in {{ round.position }} position on the leaderboards. Your best solve was {{ round.best }}.</p>
+                                    </div>
+                                    <!--* other ones -->
+                                    <div v-else>
                                         <p class="fs-5 lead">In the {{ round.round }}, your average was {{ formatTime(round.average) }} Your solves were: {{ displayTimeArray(round.solves) }}. You were in {{ round.position }} position on the leaderboards. Your best solve was {{ formatTime(round.best) }}.</p>
                                     </div>
                                 </li>
@@ -104,11 +124,12 @@ export default{
             })
         }
 
-        // time formatting
+        //* time formatting
         function formatTime(time, type='normal'){
             time = time.toString()
+            //* normal type
             if(type === 'normal'){
-                // DNF, DNS check
+                //* DNF, DNS check
                 if(time === "0"){
                     return 'DNS'
                 }
@@ -116,7 +137,7 @@ export default{
                     return 'DNF'
                 }
     
-                // Actual time formatting
+                //* Actual time formatting
                 if(time.length === 6){
                     time = `${time[0]}${time[1]}:${time[2]}${time[3]}.${time[4]}${time[5]}` 
                 }
@@ -134,8 +155,9 @@ export default{
                 }
             }
 
+            //* fmc
             if(type === 'fmc'){
-                // DNF, DNS check
+                //* DNF, DNS check
                 if(time === "0"){
                     return 'DNS'
                 }
@@ -147,19 +169,25 @@ export default{
             return time;
         }
 
-        function formatMultiple(times){
+        function formatMultiple(times, type='normal'){
             let results = [];
+            //* normal times
             for(let time of times){
-                results.push(formatTime(time))
+                results.push(formatTime(time, type))
             }
             
             return results
         }
 
         //* displaying arrays
-        function displayTimeArray(arr){
+        function displayTimeArray(arr, type='normal'){
             let finalStr = ''
-            arr = formatMultiple(arr)
+            if(type === 'normal'){
+                arr = formatMultiple(arr)
+            }
+            if(type ==='fmc'){
+                
+            }
 
             finalStr = arr.join('; ')
             return finalStr
