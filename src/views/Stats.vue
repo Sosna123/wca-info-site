@@ -183,100 +183,55 @@ export default{
                 //*  solved        = difference + missed
                 //*  attempted     = solved + missed
 
+
+                let hours, minutes, seconds
+                let timeToSolve, diffrence, missed, solved, attempted
+
                 if(time.length === 10){
-                    let hours, minutes, seconds
-                    
-                    // timeInSeconds = TTTT
-                    const timeToSolve = Number(`${time[3]}${time[4]}${time[5]}${time[6]}${time[7]}`)
-                    if(timeToSolve > 3600){
-                        hours = Math.trunc(timeToSolve / 3600)
-                        minutes = Math.trunc((timeToSolve - (hours * 3600)) / 60)
-                        if(minutes.toString().length === 1){
-                            minutes = `0` + minutes.toString()
-                        }
-
-                        seconds = Math.trunc(timeToSolve - ((hours * 3600) + (minutes * 60)))
-                        if(seconds.toString().length === 1){
-                            seconds = `0` + seconds.toString()
-                        }
-                    }else{
-                        minutes = Math.trunc(timeToSolve / 60)
-                        if(minutes.toString().length === 1){
-                            minutes = `0` + minutes.toString()
-                        }
-
-                        seconds = timeToSolve - minutes * 60
-                        if(seconds.toString().length === 1){
-                            seconds = `0` + seconds.toString()
-                        }
-                    }
-                    // difference = 99 - DD
-                    const diffrence = 99 - Number(`${Number(time[1])}${Number(time[2])}`)
-                    // missed = MM
-                    const missed = Number(`${Number(time[8])}${Number(time[9])}`)
-                    // solved = difference + missed
-                    const solved = diffrence + missed
-                    // attempted = solved + missed
-                    const attempted = solved + missed
-                    
-                    if(timeToSolve >= 3600){
-                        return `${solved}/${attempted} ${hours}:${minutes}:${seconds}`
-                    }else{
-                        return `${solved}/${attempted} ${minutes}:${seconds}`
-                    }
+                    timeToSolve = Number(`${time[3]}${time[4]}${time[5]}${time[6]}${time[7]}`)
+                    diffrence = 99 - Number(`${Number(time[1])}${Number(time[2])}`)
+                    missed = Number(`${Number(time[8])}${Number(time[9])}`)
+                    solved = diffrence + missed
+                    attempted = solved + missed
                 }
                 if(time.length === 9){
-                    let hours, minutes, seconds
+                    timeToSolve = Number(`${time[3]}${time[4]}${time[5]}${time[6]}`)
+                    diffrence = 99 - Number(`${Number(time[1])}${Number(time[2])}`)
+                    missed = Number(`${Number(time[7])}${Number(time[8])}`)
+                    solved = diffrence + missed
+                    attempted = solved + missed
+                }
 
-                    // timeInSeconds = TTTT
-                    const timeToSolve = Number(`${time[3]}${time[4]}${time[5]}${time[6]}`)
-                    if(timeToSolve >= 3600){
-                        hours = Math.trunc(timeToSolve / 3600)
-                        minutes = Math.trunc((timeToSolve - (hours * 3600)) / 60)
-                        if(minutes.toString().length === 1){
-                            minutes = `0` + minutes.toString()
-                        }
-
-                        seconds = Math.trunc(timeToSolve - ((hours * 3600) + (minutes * 60)))
-                        if(seconds.toString().length === 1){
-                            seconds = `0` + seconds.toString()
-                        }
-                    }else{
-                        minutes = Math.trunc(timeToSolve / 60)
-                        if(minutes.toString().length === 1){
-                            minutes = `0` + minutes.toString()
-                        }
-
-                        seconds = timeToSolve - minutes * 60
-                        if(seconds.toString().length === 1){
-                            seconds = `0` + seconds.toString()
-                        }
-                    }
-                    // difference = 99 - DD
-                    const diffrence = 99 - Number(`${Number(time[1])}${Number(time[2])}`)
-                    // missed = MM
-                    const missed = Number(`${Number(time[7])}${Number(time[8])}`)
-                    // solved = difference + missed
-                    const solved = diffrence + missed
-                    // attempted = solved + missed
-                    const attempted = solved + missed
-    
-                    // console.log(time)
-                    // console.log(timeToSolve)
-                    // console.log(missed)
-                    // console.log(solved)
-                    // console.log(attempted)
-                    // console.log(`${solved}/${attempted} ${minutes}:${seconds}`)
-                    
-                    if(timeToSolve >= 3600){
-                        return `${solved}/${attempted} ${hours}:${minutes}:${seconds}`
-                    }else{
-                        return `${solved}/${attempted} ${minutes}:${seconds}`
+                if(timeToSolve >= 3600){
+                    hours = Math.trunc(timeToSolve / 3600)
+                    minutes = Math.trunc((timeToSolve - (hours * 3600)) / 60)
+                    if(minutes.toString().length === 1){
+                        minutes = `0` + minutes.toString()
                     }
 
+                    seconds = Math.trunc(timeToSolve - ((hours * 3600) + (minutes * 60)))
+                    if(seconds.toString().length === 1){
+                        seconds = `0` + seconds.toString()
+                    }
+                }else{
+                    minutes = Math.trunc(timeToSolve / 60)
+                    if(minutes.toString().length === 1){
+                        minutes = `0` + minutes.toString()
+                    }
+
+                    seconds = timeToSolve - minutes * 60
+                    if(seconds.toString().length === 1){
+                        seconds = `0` + seconds.toString()
+                    }
+                
+                }
+                if(timeToSolve >= 3600){
+                    return `${solved}/${attempted} ${hours}:${minutes}:${seconds}`
+                }else{
+                    return `${solved}/${attempted} ${minutes}:${seconds}`
                 }
             }
-            
+
             return time;
         }
 
