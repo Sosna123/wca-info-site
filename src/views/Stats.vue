@@ -34,7 +34,7 @@
                         <li v-for="event in rank">{{ eventsObj[event.eventId] }}:  
                             <!--! singles -->
                             <ul v-if="rankKey === 'singles'">
-                                <!--* fmc display -->
+                                <!--* fmc -->
                                 <div v-if="eventsObj[event.eventId] === 'Fewest moves challenge'">
                                     <li>Your best single is: {{ event.best }}:</li>
                                     <li>Your best solve is in {{ event.rank.world }} place in world rankings, in {{ event.rank.continent }} place in continental ranking, in {{ event.rank.country }} place in country ranking</li>
@@ -47,7 +47,7 @@
                             </ul>
                             <!--! averages -->
                             <ul v-else>
-                                <!--* fmc display -->
+                                <!--* fmc -->
                                 <div v-if="eventsObj[event.eventId] === 'Fewest moves challenge'">
                                     <li>Your best average is: {{ formatTime(event.best) }}:</li>
                                     <li>Your best solve is in {{ event.rank.world }} place in world rankings, in {{ event.rank.continent }} place in continental ranking, in {{ event.rank.country }} place in country ranking</li>
@@ -77,6 +77,14 @@
                                     <div v-if="eventsObj[eventKey] === 'Fewest moves challenge'">
                                         <p class="fs-5 lead">In the {{ round.round }}, your average was {{ formatTime(round.average) }} Your solves were: {{ displayTimeArray(round.solves, 'fmc') }}. You were in {{ round.position }} position on the leaderboards. Your best solve was {{ round.best }}.</p>
                                     </div>
+                                    <!--* mbf new -->
+                                    <div v-if="eventsObj[eventKey] === 'Multi-blind (new)'">
+                                        <p class="fs-5 lead">In the {{ round.round }}, your average was {{ round.average }} Your solves were: {{ displayTimeArray(round.solves) }}. You were in {{ round.position }} position on the leaderboards. Your best solve was {{ formatTime(round.best, 'new-mbf') }}.</p>
+                                    </div>
+                                    <!--* mbf old -->
+                                    <div v-if="eventsObj[eventKey] === 'Multi-blind (old)'">
+                                        <p class="fs-5 lead">{{ round }}</p>
+                                    </div>
                                     <!--* other ones -->
                                     <div v-else>
                                         <p class="fs-5 lead">In the {{ round.round }}, your average was {{ formatTime(round.average) }} Your solves were: {{ displayTimeArray(round.solves) }}. You were in {{ round.position }} position on the leaderboards. Your best solve was {{ formatTime(round.best) }}.</p>
@@ -98,7 +106,7 @@ import { eventsObj } from '../js/objects.js'
 export default{
     name: 'stats',
     setup(){
-        const wcaId = ref('2022arez01')
+        const wcaId = ref('2016SIGG01')
         let person = ref({});
         let isPersonData = ref({bool: false});
 
@@ -127,15 +135,20 @@ export default{
         //* time formatting
         function formatTime(time, type='normal'){
             time = time.toString()
-            //* normal type
-            if(type === 'normal'){
-                //* DNF, DNS check
-                if(time === "0"){
+
+            //* DNF, DNS check
+            if(time === "0"){
                     return 'DNS'
                 }
                 if(time === "-1"){
                     return 'DNF'
                 }
+                if(time === "0"){
+                    return ''
+                }
+
+            //* normal type
+            if(type === 'normal'){
     
                 //* Actual time formatting
                 if(time.length === 6){
@@ -155,14 +168,112 @@ export default{
                 }
             }
 
-            //* fmc
             if(type === 'fmc'){
-                //* DNF, DNS check
-                if(time === "0"){
-                    return 'DNS'
+                return time;
+            }
+
+            //* new mbf
+            if(type === 'new-mbf'){
+
+                //*  0123456789
+                //*  0DDTTTTTMM
+                //*  difference    = 99 - DD
+                //*  timeInSeconds = TTTTT (99999 means unknown)
+                //*  missed        = MM
+                //*  solved        = difference + missed
+                //*  attempted     = solved + missed
+
+                if(time.length === 10){
+                    let hours, minutes, seconds
+                    
+                    // timeInSeconds = TTTT
+                    const timeToSolve = Number(`${time[3]}${time[4]}${time[5]}${time[6]}${time[7]}`)
+                    if(timeToSolve > 3600){
+                        hours = Math.trunc(timeToSolve / 3600)
+                        minutes = Math.trunc((timeToSolve - (hours * 3600)) / 60)
+                        if(minutes.toString().length === 1){
+                            minutes = `0` + minutes.toString()
+                        }
+
+                        seconds = Math.trunc(timeToSolve - ((hours * 3600) + (minutes * 60)))
+                        if(seconds.toString().length === 1){
+                            seconds = `0` + seconds.toString()
+                        }
+                    }else{
+                        minutes = Math.trunc(timeToSolve / 60)
+                        if(minutes.toString().length === 1){
+                            minutes = `0` + minutes.toString()
+                        }
+
+                        seconds = timeToSolve - minutes * 60
+                        if(seconds.toString().length === 1){
+                            seconds = `0` + seconds.toString()
+                        }
+                    }
+                    // difference = 99 - DD
+                    const diffrence = 99 - Number(`${Number(time[1])}${Number(time[2])}`)
+                    // missed = MM
+                    const missed = Number(`${Number(time[8])}${Number(time[9])}`)
+                    // solved = difference + missed
+                    const solved = diffrence + missed
+                    // attempted = solved + missed
+                    const attempted = solved + missed
+                    
+                    if(timeToSolve >= 3600){
+                        return `${solved}/${attempted} ${hours}:${minutes}:${seconds}`
+                    }else{
+                        return `${solved}/${attempted} ${minutes}:${seconds}`
+                    }
                 }
-                if(time === "-1"){
-                    return 'DNF'
+                if(time.length === 9){
+                    let hours, minutes, seconds
+
+                    // timeInSeconds = TTTT
+                    const timeToSolve = Number(`${time[3]}${time[4]}${time[5]}${time[6]}`)
+                    if(timeToSolve >= 3600){
+                        hours = Math.trunc(timeToSolve / 3600)
+                        minutes = Math.trunc((timeToSolve - (hours * 3600)) / 60)
+                        if(minutes.toString().length === 1){
+                            minutes = `0` + minutes.toString()
+                        }
+
+                        seconds = Math.trunc(timeToSolve - ((hours * 3600) + (minutes * 60)))
+                        if(seconds.toString().length === 1){
+                            seconds = `0` + seconds.toString()
+                        }
+                    }else{
+                        minutes = Math.trunc(timeToSolve / 60)
+                        if(minutes.toString().length === 1){
+                            minutes = `0` + minutes.toString()
+                        }
+
+                        seconds = timeToSolve - minutes * 60
+                        if(seconds.toString().length === 1){
+                            seconds = `0` + seconds.toString()
+                        }
+                    }
+                    // difference = 99 - DD
+                    const diffrence = 99 - Number(`${Number(time[1])}${Number(time[2])}`)
+                    // missed = MM
+                    const missed = Number(`${Number(time[7])}${Number(time[8])}`)
+                    // solved = difference + missed
+                    const solved = diffrence + missed
+                    // attempted = solved + missed
+                    const attempted = solved + missed
+    
+                    // console.log(time)
+                    // console.log(timeToSolve)
+                    // console.log(missed)
+                    // console.log(solved)
+                    // console.log(attempted)
+                    // console.log(`${solved}/${attempted} ${minutes}:${seconds}`)
+                    
+                    if(timeToSolve >= 3600){
+                        return `${solved}/${attempted} ${hours}:${minutes}:${seconds}`
+                    }else{
+                        return `${solved}/${attempted} ${minutes}:${seconds}`
+                    }
+
                 }
             }
             
@@ -186,7 +297,7 @@ export default{
                 arr = formatMultiple(arr)
             }
             if(type ==='fmc'){
-                
+                arr = formatMultiple(arr, type)
             }
 
             finalStr = arr.join('; ')
