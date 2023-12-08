@@ -102,6 +102,7 @@
 <script>
 import { ref } from 'vue';
 import { eventsObj } from '../js/objects.js'
+import { formatNormal, formatNewMbf } from '../js/timeFormat.js'
 
 export default{
     name: 'stats',
@@ -133,107 +134,35 @@ export default{
         }
 
         //* time formatting
-        function formatTime(time, type='normal'){
-            time = time.toString()
+function formatTime(time, type='normal'){
+    time = time.toString()
 
-            //* DNF, DNS check
-            if(time === "0"){
-                    return 'DNS'
-                }
-                if(time === "-1"){
-                    return 'DNF'
-                }
-                if(time === "0"){
-                    return ''
-                }
+    //* DNF, DNS check
+    if(time === "-2"){
+            return 'DNS'
+    }
+    if(time === "-1"){
+            return 'DNF'
+    }
+    if(time === "0"){
+            return ''
+    }
 
-            //* normal type
-            if(type === 'normal'){
-    
-                //* Actual time formatting
-                if(time.length === 6){
-                    time = `${time[0]}${time[1]}:${time[2]}${time[3]}.${time[4]}${time[5]}` 
-                }
-                if(time.length === 5){
-                    time = `${time[0]}:${time[1]}${time[2]}.${time[3]}${time[4]}` 
-                }
-                if(time.length === 4){
-                    time = `${time[0]}${time[1]}.${time[2]}${time[3]}` 
-                }
-                if(time.length === 3){
-                    time = `${time[0]}.${time[1]}${time[2]}` 
-                }
-                if(time.length === 2){
-                    time = `0.${time[0]}${time[1]}`
-                }
-            }
+    //* normal type
+    if(type === 'normal'){
+        return formatNormal(time)
+    }
 
-            if(type === 'fmc'){
-                return time;
-            }
+    //* fmc
+    if(type === 'fmc'){
+        return time;
+    }
 
-            //* new mbf
-            if(type === 'new-mbf'){
-
-                //*  0123456789
-                //*  0DDTTTTTMM
-                //*  difference    = 99 - DD
-                //*  timeInSeconds = TTTTT (99999 means unknown)
-                //*  missed        = MM
-                //*  solved        = difference + missed
-                //*  attempted     = solved + missed
-
-
-                let hours, minutes, seconds
-                let timeToSolve, diffrence, missed, solved, attempted
-
-                if(time.length === 10){
-                    timeToSolve = Number(`${time[3]}${time[4]}${time[5]}${time[6]}${time[7]}`)
-                    diffrence = 99 - Number(`${Number(time[1])}${Number(time[2])}`)
-                    missed = Number(`${Number(time[8])}${Number(time[9])}`)
-                    solved = diffrence + missed
-                    attempted = solved + missed
-                }
-                if(time.length === 9){
-                    timeToSolve = Number(`${time[3]}${time[4]}${time[5]}${time[6]}`)
-                    diffrence = 99 - Number(`${Number(time[1])}${Number(time[2])}`)
-                    missed = Number(`${Number(time[7])}${Number(time[8])}`)
-                    solved = diffrence + missed
-                    attempted = solved + missed
-                }
-
-                if(timeToSolve >= 3600){
-                    hours = Math.trunc(timeToSolve / 3600)
-                    minutes = Math.trunc((timeToSolve - (hours * 3600)) / 60)
-                    if(minutes.toString().length === 1){
-                        minutes = `0` + minutes.toString()
-                    }
-
-                    seconds = Math.trunc(timeToSolve - ((hours * 3600) + (minutes * 60)))
-                    if(seconds.toString().length === 1){
-                        seconds = `0` + seconds.toString()
-                    }
-                }else{
-                    minutes = Math.trunc(timeToSolve / 60)
-                    if(minutes.toString().length === 1){
-                        minutes = `0` + minutes.toString()
-                    }
-
-                    seconds = timeToSolve - minutes * 60
-                    if(seconds.toString().length === 1){
-                        seconds = `0` + seconds.toString()
-                    }
-                
-                }
-                if(timeToSolve >= 3600){
-                    return `${solved}/${attempted} ${hours}:${minutes}:${seconds}`
-                }else{
-                    return `${solved}/${attempted} ${minutes}:${seconds}`
-                }
-            }
-
-            return time;
-        }
+    //* new mbf
+    if(type === 'new-mbf'){
+        return formatNewMbf(time)
+    }
+}
 
         function formatMultiple(times, type='normal'){
             let results = [];
