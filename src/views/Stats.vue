@@ -36,12 +36,17 @@
                             <ul v-if="rankKey === 'singles'">
                                 <!--* fmc -->
                                 <div v-if="eventsObj[event.eventId] === 'Fewest moves challenge'">
-                                    <li>Your best single is: {{ event.best }}:</li>
+                                    <li>Your best single is: {{ event.best }}.</li>
+                                    <li>Your best solve is in {{ event.rank.world }} place in world rankings, in {{ event.rank.continent }} place in continental ranking, in {{ event.rank.country }} place in country ranking</li>
+                                </div>
+                                <!--* new-mbf -->
+                                <div v-else-if="eventsObj[event.eventId] === 'Multi-blind (new)'">
+                                    <li>Your best single is: {{ formatTime(event.best, "new-mbf") }}</li>
                                     <li>Your best solve is in {{ event.rank.world }} place in world rankings, in {{ event.rank.continent }} place in continental ranking, in {{ event.rank.country }} place in country ranking</li>
                                 </div>
                                 <!--* other -->
                                 <div v-else>
-                                    <li>Your best single is: {{ formatTime(event.best) }}:</li>
+                                    <li>Your best single is: {{ formatTime(event.best) }}</li>
                                     <li>Your best solve is in {{ event.rank.world }} place in world rankings, in {{ event.rank.continent }} place in continental ranking, in {{ event.rank.country }} place in country ranking</li>
                                 </div>
                             </ul>
@@ -49,12 +54,14 @@
                             <ul v-else>
                                 <!--* fmc -->
                                 <div v-if="eventsObj[event.eventId] === 'Fewest moves challenge'">
-                                    <li>Your best average is: {{ formatTime(event.best) }}:</li>
+                                    <li>Your best average is: {{ formatTime(event.best) }}</li>
                                     <li>Your best solve is in {{ event.rank.world }} place in world rankings, in {{ event.rank.continent }} place in continental ranking, in {{ event.rank.country }} place in country ranking</li>
                                 </div>
+                                <!--* new-mbf -->
+                                <div v-else-if="eventsObj[event.eventId] === 'Multi-blind (new)'"></div>
                                 <!--* other -->
                                 <div v-else>
-                                    <li>Your best average is: {{ formatTime(event.best) }}:</li>
+                                    <li>Your best average is: {{ formatTime(event.best) }}</li>
                                     <li>Your best solve is in {{ event.rank.world }} place in world rankings, in {{ event.rank.continent }} place in continental ranking, in {{ event.rank.country }} place in country ranking</li>
                                 </div>
                             </ul>
@@ -78,11 +85,11 @@
                                         <p class="fs-5 lead">In the {{ round.round }}, your average was {{ formatTime(round.average) }} Your solves were: {{ displayTimeArray(round.solves, 'fmc') }}. You were in {{ round.position }} position on the leaderboards. Your best solve was {{ round.best }}.</p>
                                     </div>
                                     <!--* mbf new -->
-                                    <div v-if="eventsObj[eventKey] === 'Multi-blind (new)'">
-                                        <p class="fs-5 lead">In the {{ round.round }}, your average was {{ round.average }} Your solves were: {{ displayTimeArray(round.solves) }}. You were in {{ round.position }} position on the leaderboards. Your best solve was {{ formatTime(round.best, 'new-mbf') }}.</p>
+                                    <div v-else-if="eventsObj[eventKey] === 'Multi-blind (new)'">
+                                        <p class="fs-5 lead">In the {{ round.round }} your solves were: {{ displayTimeArray(round.solves, 'new-mbf') }}. You were in {{ round.position }} position on the leaderboards. Your best solve was {{ formatTime(round.best, 'new-mbf') }}.</p>
                                     </div>
                                     <!--* mbf old -->
-                                    <div v-if="eventsObj[eventKey] === 'Multi-blind (old)'">
+                                    <div v-else-if="eventsObj[eventKey] === 'Multi-blind (old)'">
                                         <p class="fs-5 lead">{{ round }}</p>
                                     </div>
                                     <!--* other ones -->
@@ -134,39 +141,40 @@ export default{
         }
 
         //* time formatting
-function formatTime(time, type='normal'){
-    time = time.toString()
+        function formatTime(time, type='normal'){
+            time = time.toString()
 
-    //* DNF, DNS check
-    if(time === "-2"){
-            return 'DNS'
-    }
-    if(time === "-1"){
-            return 'DNF'
-    }
-    if(time === "0"){
-            return ''
-    }
+            //* DNF, DNS check
+            if(time === "-2"){
+                return 'DNS'
+            }
+            if(time === "-1"){
+                return 'DNF'
+            }
+            if(time === "0"){
+                return ''
+            }
 
-    //* normal type
-    if(type === 'normal'){
-        return formatNormal(time)
-    }
+            //* normal type
+            if(type === 'normal'){
+                return formatNormal(time)
+            }
 
-    //* fmc
-    if(type === 'fmc'){
-        return time;
-    }
+            //* fmc
+            if(type === 'fmc'){
+                return time;
+            }
 
-    //* new mbf
-    if(type === 'new-mbf'){
-        return formatNewMbf(time)
-    }
-}
+            //* new mbf
+            if(type === 'new-mbf'){
+                return formatNewMbf(time)
+            }
+        }
 
         function formatMultiple(times, type='normal'){
             let results = [];
-            //* normal times
+
+            //* times
             for(let time of times){
                 results.push(formatTime(time, type))
             }
@@ -177,12 +185,8 @@ function formatTime(time, type='normal'){
         //* displaying arrays
         function displayTimeArray(arr, type='normal'){
             let finalStr = ''
-            if(type === 'normal'){
-                arr = formatMultiple(arr)
-            }
-            if(type ==='fmc'){
-                arr = formatMultiple(arr, type)
-            }
+
+            arr = formatMultiple(arr, type)
 
             finalStr = arr.join('; ')
             return finalStr
