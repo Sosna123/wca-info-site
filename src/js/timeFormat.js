@@ -35,12 +35,9 @@ function formatNewMbf(time){
     let result
 
     let timeArr = time.split('')
-    console.log(timeArr)
 
     missed = Number(`${timeArr[timeArr.length - 2]}${timeArr[timeArr.length - 1]}`);
     timeToSolve = timeArr.length === 10 ? Number(`${timeArr[3]}${timeArr[4]}${timeArr[5]}${timeArr[6]}${timeArr[7]}`) : Number(`${timeArr[3]}${timeArr[4]}${timeArr[5]}${timeArr[6]}`);
-
-    console.log(timeToSolve)
 
     diffrence = 99 - Number(`${timeArr[0]}${timeArr[1]}`)
     solved = diffrence + missed
