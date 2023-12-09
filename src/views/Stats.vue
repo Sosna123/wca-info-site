@@ -119,9 +119,9 @@
 </template>
 
 <script lang="ts">
-import { ref } from 'vue';
-import { eventsObj } from '../js/objects.js'
-import { formatTime } from '../js/timeFormat.js'
+import { defineComponent, ref } from 'vue';
+import eventsObj from '../js/objects.ts'
+import formatTime from '../js/timeFormat.ts'
 
 export default defineComponent({
     name: 'stats',
@@ -159,8 +159,8 @@ export default defineComponent({
         }
 
         //* formating arrays
-        function formatMultiple(times: [string|number], type='normal'){
-            let results = [];
+        function formatMultiple(times: [string|number], type: "normal"|"fmc"|"new-mbf" = 'normal'){
+            let results: string[] = [];
 
             //* times
             for(let time of times){
@@ -171,7 +171,7 @@ export default defineComponent({
         }
 
         //* displaying arrays
-        function displayTimeArray(arr, type='normal'){
+        function displayTimeArray(arr: string[], type='normal'){
             let finalStr = ''
 
             arr = formatMultiple(arr, type)

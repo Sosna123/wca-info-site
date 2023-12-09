@@ -26,4 +26,4 @@ const eventsObj = {
 }
 // "sq1": 'Square-1' 
 
-module.exports = { countries, eventsObj };
+export default [countries, eventsObj]

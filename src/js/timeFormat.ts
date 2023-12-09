@@ -6,17 +6,20 @@ function formatNormal(time: string): string{
     if(time.length === 6){
         result = `${time[0]}${time[1]}:${time[2]}${time[3]}.${time[4]}${time[5]}` 
     }
-    if(time.length === 5){
+    else if(time.length === 5){
         result = `${time[0]}:${time[1]}${time[2]}.${time[3]}${time[4]}` 
     }
-    if(time.length === 4){
+    else if(time.length === 4){
         result = `${time[0]}${time[1]}.${time[2]}${time[3]}` 
     }
-    if(time.length === 3){
+    else if(time.length === 3){
         result = `${time[0]}.${time[1]}${time[2]}` 
     }
-    if(time.length === 2){
+    else if(time.length === 2){
         result = `0.${time[0]}${time[1]}`
+    }
+    else{
+        result = time
     }
 
     return result;
@@ -49,19 +52,15 @@ function formatNewMbf(time: string): string{
     if(timeToSolve === 9999){
         result = `${solved}/${attempted} in unknown time`
         return result
-    }else{
-        hours = timeToSolve >= 3600 ? Math.trunc(timeToSolve / 3600) : 0;
-
-        minutes = timeToSolve >= 3600 ? Math.trunc((timeToSolve - (hours * 3600)) / 60) : Math.trunc(timeToSolve / 60);
-        if(minutes.toString().length === 1){
-            minutesStr = `0` + minutes.toString()
-        }
-        
-        seconds = timeToSolve >= 3600 ? Math.trunc(timeToSolve - ((hours * 3600) + (minutes * 60))) : timeToSolve - minutes * 60;
-        if(seconds.toString().length === 1){
-            secondsStr = `0` + seconds.toString()
-        }
     }
+    hours = timeToSolve >= 3600 ? Math.trunc(timeToSolve / 3600) : 0;
+
+    minutes = timeToSolve >= 3600 ? Math.trunc((timeToSolve - (hours * 3600)) / 60) : Math.trunc(timeToSolve / 60);
+    minutesStr = minutes.toString().length === 1 ? `0` + minutes.toString(): minutes.toString()
+        
+    seconds = timeToSolve >= 3600 ? Math.trunc(timeToSolve - ((hours * 3600) + (minutes *60))) : timeToSolve - minutes * 60;
+    secondsStr = seconds.toString().length === 1 ? `0` + seconds.toString() : seconds.toString()
+    
 
     result = timeToSolve >= 3600 ? `${solved}/${attempted} ${hours}:${minutesStr}:${secondsStr}` : `${solved}/${attempted} ${minutesStr}:${secondsStr}`
 
@@ -97,6 +96,8 @@ function formatTime(time: number|string, type: "normal"|"fmc"|"new-mbf" = 'norma
     if(type === 'new-mbf'){
         return formatNewMbf(time)
     }
+
+    return 'd'
 }
 
-module.exports = { formatTime };
+export default formatTime
