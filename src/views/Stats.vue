@@ -120,7 +120,7 @@
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
-import eventsObj from '../js/objects'
+import eventsObj from '../js/events'
 import formatTime from '../js/timeFormat'
 import EventType from '../js/types'
 
@@ -196,4 +196,4 @@ export default defineComponent({
 
 <style>
 
-</style>
+</style>../js/countries

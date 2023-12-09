@@ -29,13 +29,13 @@
     </div>
 </template>
 
-<script>
-import { ref } from 'vue';
-import { countries } from '../js/objects.js'
+<script lang="ts">
+import { defineComponent, ref } from 'vue';
+import countries from '../js/countries'
 
-export default{
+export default defineComponent({
     name: "comps",
-    setup(){
+    setup() {
         // packages
         const moment = require('moment')
 
@@ -82,9 +82,9 @@ export default{
             moment, countries
         }
     }
-}
+})
 </script>
 
 <style>
 
-</style>
+</style>../js/countries
