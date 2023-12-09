@@ -1,3 +1,5 @@
+import EventType from '../js/types'
+
 //* normal times
 function formatNormal(time: string): string{
     let result: string;
@@ -68,7 +70,7 @@ function formatNewMbf(time: string): string{
 }
 
 //* check which function to use
-function formatTime(time: number|string, type: "normal"|"fmc"|"new-mbf" = 'normal'): string{
+function formatTime(time: number|string, type: EventType = 'normal'): string{
     time = time.toString()
 
     //* DNF, DNS check
