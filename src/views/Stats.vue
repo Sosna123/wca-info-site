@@ -118,12 +118,12 @@
 </div>
 </template>
 
-<script>
+<script lang="ts">
 import { ref } from 'vue';
 import { eventsObj } from '../js/objects.js'
 import { formatTime } from '../js/timeFormat.js'
 
-export default{
+export default defineComponent({
     name: 'stats',
     setup(){
         //* display vars
@@ -159,7 +159,7 @@ export default{
         }
 
         //* formating arrays
-        function formatMultiple(times, type='normal'){
+        function formatMultiple(times: [string|number], type='normal'){
             let results = [];
 
             //* times
@@ -190,7 +190,7 @@ export default{
             //* packages
         }
     }
-}
+})
 </script>
 
 <style>
