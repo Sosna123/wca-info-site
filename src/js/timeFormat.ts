@@ -1,5 +1,5 @@
 //* normal times
-function formatNormal(time: string){
+function formatNormal(time: string): string{
     let result: string;
 
     //* Actual time formatting
@@ -23,7 +23,7 @@ function formatNormal(time: string){
 }
 
 //* new multiblind
-function formatNewMbf(time: string){
+function formatNewMbf(time: string): string{
     //*  0DDTTTTTMM
     //*  difference    = 99 - DD
     //*  timeInSeconds = TTTTT (99999 means unknown)
@@ -68,4 +68,35 @@ function formatNewMbf(time: string){
     return result
 }
 
-module.exports = { formatNormal, formatNewMbf };
+//* check which function to use
+function formatTime(time: number|string, type: "normal"|"fmc"|"new-mbf" = 'normal'): string{
+    time = time.toString()
+
+    //* DNF, DNS check
+    if(time === "-2"){
+        return 'DNS'
+    }
+    if(time === "-1"){
+        return 'DNF'
+    }
+    if(time === "0"){
+        return ''
+    }
+
+    //* normal type
+    if(type === 'normal'){
+        return formatNormal(time)
+    }
+
+    //* fmc
+    if(type === 'fmc'){
+        return time;
+    }
+
+    //* new mbf
+    if(type === 'new-mbf'){
+        return formatNewMbf(time)
+    }
+}
+
+module.exports = { formatTime };

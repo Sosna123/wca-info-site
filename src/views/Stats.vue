@@ -121,7 +121,7 @@
 <script>
 import { ref } from 'vue';
 import { eventsObj } from '../js/objects.js'
-import { formatNormal, formatNewMbf } from '../js/timeFormat.js'
+import { formatTime } from '../js/timeFormat.js'
 
 export default{
     name: 'stats',
@@ -158,37 +158,7 @@ export default{
             })
         }
 
-        //* time formatting
-        function formatTime(time, type='normal'){
-            time = time.toString()
-
-            //* DNF, DNS check
-            if(time === "-2"){
-                return 'DNS'
-            }
-            if(time === "-1"){
-                return 'DNF'
-            }
-            if(time === "0"){
-                return ''
-            }
-
-            //* normal type
-            if(type === 'normal'){
-                return formatNormal(time)
-            }
-
-            //* fmc
-            if(type === 'fmc'){
-                return time;
-            }
-
-            //* new mbf
-            if(type === 'new-mbf'){
-                return formatNewMbf(time)
-            }
-        }
-
+        //* formating arrays
         function formatMultiple(times, type='normal'){
             let results = [];
 

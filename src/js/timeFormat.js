@@ -55,4 +55,31 @@ function formatNewMbf(time) {
     result = timeToSolve >= 3600 ? "".concat(solved, "/").concat(attempted, " ").concat(hours, ":").concat(minutesStr, ":").concat(secondsStr) : "".concat(solved, "/").concat(attempted, " ").concat(minutesStr, ":").concat(secondsStr);
     return result;
 }
-module.exports = { formatNormal: formatNormal, formatNewMbf: formatNewMbf };
+//* check which function to use
+function formatTime(time, type) {
+    if (type === void 0) { type = 'normal'; }
+    time = time.toString();
+    //* DNF, DNS check
+    if (time === "-2") {
+        return 'DNS';
+    }
+    if (time === "-1") {
+        return 'DNF';
+    }
+    if (time === "0") {
+        return '';
+    }
+    //* normal type
+    if (type === 'normal') {
+        return formatNormal(time);
+    }
+    //* fmc
+    if (type === 'fmc') {
+        return time;
+    }
+    //* new mbf
+    if (type === 'new-mbf') {
+        return formatNewMbf(time);
+    }
+}
+module.exports = { formatTime: formatTime };
