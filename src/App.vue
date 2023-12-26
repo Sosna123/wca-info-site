@@ -5,11 +5,14 @@
 
 <script>
 import Navbar from './components/Navbar.vue'
-export default{
+import { defineComponent } from 'vue'
+
+
+export default defineComponent({
     components: {
         Navbar
     }
-}
+})
 </script>
 
 <style>

@@ -18,13 +18,14 @@
     </nav>
 </template>
 
-<script>
+<script lang="ts">
 import {useRoute} from 'vue-router'
+import { defineComponent } from 'vue';
 
-export default{
+export default defineComponent({
     setup(){
 
-        function checkRoute(name){
+        function checkRoute(name: string){
             const route = useRoute()
             const currentRouteName = route.name;
 
@@ -38,7 +39,7 @@ export default{
             checkRoute
         }
     }
-}
+})
 </script>
 
 <style>
