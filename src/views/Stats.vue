@@ -35,12 +35,12 @@
             <p v-if="!rankingsShow" class="d-inline-block ms-1">...</p>
             <ul class="fs-5 lead" v-else>
                 <li v-for="(rank, rankKey) in person.rank">
-                    <p v-if="rankKey === 'singles'">Singles:</p>
+                    <p v-if="rankKey.toString() === 'singles'">Singles:</p>
                     <p v-else>Averages:</p>
                     <ul class="fs-5 lead">
                         <li v-for="event in rank">{{ eventsObj[event.eventId] }}:  
                             <!--! singles -->
-                            <ul v-if="rankKey === 'singles'">
+                            <ul v-if="rankKey.toString() === 'singles'">
                                 <!--* fmc -->
                                 <div v-if="eventsObj[event.eventId] === 'Fewest moves challenge'">
                                     <li>Your best single is: {{ event.best }}.</li>

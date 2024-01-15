@@ -36,17 +36,34 @@ import countries from '../js/countries'
 export default defineComponent({
     name: "comps",
     setup() {
-        // packages
+        //* packages
         const moment = require('moment')
-
-        // vars
+        
+        //* types
+        type items = {
+            "id": string,
+            "name": string,
+            "city": string,
+            "country": string,
+            "date": {"from": string, "till": string, "numberOfDays": string},
+            "isCanceled": boolean,
+            "events": string[],
+            "wcaDelegates": {"name": string, "email": string}[],
+            "organizers": {"name": string, "email": string}[],
+            "venue": {"name": string, "address": string, "details": string, "coordinates": {"latitude": number, "longitude": number}},
+            "information": string,
+            "externalWebsite": string
+        }
+        type fetchedData = {"pagination": object, "total": number, "items": items[]};
+        
+        //* vars
         const currentDate = moment();
         let countryTag = ref('');
-        let data = '';
-        let fData = ref([]);
+        let data: items[] = [];
+        let fData = ref<items[]>([]);
         
 
-        const fetchData = async () => {
+        async function fetchData(){
             if(countryTag.value === ''){
                 return
             }
@@ -61,11 +78,12 @@ export default defineComponent({
                 return
             }
             
-            fetchData().then((fetchedData) => {
-                data = fetchedData;
+
+            fetchData().then((fetchedData: fetchedData) => {
+                data = fetchedData.items;
                 
                 fData.value = []
-                for(const comp of data.items){
+                for(const comp of data){
                     if(moment(currentDate).isSameOrBefore(comp.date.till)){
                         fData.value.push(comp)
                     }
