@@ -18,14 +18,7 @@
 
         <!--* comps someone took part in -->
         <div>
-            <button @click="compsShow = !compsShow" class="btn btn-outline-dark m-2">Hide</button>
-            <p class="fs-4 lead d-inline-block">You were taking part in {{ person.numberOfCompetitions }} competitions like:</p>
-            <p v-if="!compsShow" class="d-inline-block ms-1">...</p>
-            <ul class="fs-5 lead" v-else>
-                <li v-for="comp in person.competitionIds">
-                    <p>{{ comp }}</p>
-                </li>
-            </ul>
+            <p class="fs-4 lead d-inline-block">You took part in {{ person.numberOfCompetitions }} competitions.</p>
         </div>
 
         <!--* rank -->
@@ -34,50 +27,11 @@
             <p class="fs-4 lead d-inline-block"> Your rankings:</p>
             <p v-if="!rankingsShow" class="d-inline-block ms-1">...</p>
             <ul class="fs-5 lead" v-else>
-                <li v-for="(rank, rankKey) in person.rank">
-                    <p v-if="rankKey.toString() === 'singles'">Singles:</p>
-                    <p v-else>Averages:</p>
-                    <ul class="fs-5 lead">
-                        <li v-for="event in rank">{{ eventsObj[event.eventId] }}:  
-                            <!--! singles -->
-                            <ul v-if="rankKey.toString() === 'singles'">
-                                <!--* fmc -->
-                                <div v-if="eventsObj[event.eventId] === 'Fewest moves challenge'">
-                                    <li>Your best single is: {{ event.best }}.</li>
-                                    <li>Your best solve is in {{ event.rank.world }} place in world rankings, in {{ event.rank.continent }} place in continental ranking, in {{ event.rank.country }} place in country ranking</li>
-                                </div>
-                                <!--* new-mbf -->
-                                <div v-else-if="eventsObj[event.eventId] === 'Multi-blind (new)'">
-                                    <li>Your best single is: {{ formatTime(event.best, "new-mbf") }}</li>
-                                    <li>Your best solve is in {{ event.rank.world }} place in world rankings, in {{ event.rank.continent }} place in continental ranking, in {{ event.rank.country }} place in country ranking</li>
-                                </div>
-                                <!--* old-mbf -->
-                                <div v-else-if="eventsObj[event.eventId] === 'Multi-blind (old)'">
-                                    <li>Your best single is: {{ formatTime(event.best, "old-mbf") }}. {{ event.best }}. 22/30 4:24:11</li>
-                                    <li>Your best solve is in {{ event.rank.world }} place in world rankings, in {{ event.rank.continent }} place in continental ranking, in {{ event.rank.country }} place in country ranking</li>
-                                </div>
-                                <!--* other -->
-                                <div v-else>
-                                    <li>Your best single is: {{ formatTime(event.best) }}</li>
-                                    <li>Your best solve is in {{ event.rank.world }} place in world rankings, in {{ event.rank.continent }} place in continental ranking, in {{ event.rank.country }} place in country ranking</li>
-                                </div>
-                            </ul>
-                            <!--! averages -->
-                            <ul v-else>
-                                <!--* fmc -->
-                                <div v-if="eventsObj[event.eventId] === 'Fewest moves challenge'">
-                                    <li>Your best average is: {{ formatTime(event.best) }}</li>
-                                    <li>Your best solve is in {{ event.rank.world }} place in world rankings, in {{ event.rank.continent }} place in continental ranking, in {{ event.rank.country }} place in country ranking</li>
-                                </div>
-                                <!--* new-mbf -->
-                                <div v-else-if="eventsObj[event.eventId] === 'Multi-blind (new)' || eventsObj[event.eventId] === 'Multi-blind (old)'"></div>
-                                <!--* other -->
-                                <div v-else>
-                                    <li>Your best average is: {{ formatTime(event.best) }}</li>
-                                    <li>Your best solve is in {{ event.rank.world }} place in world rankings, in {{ event.rank.continent }} place in continental ranking, in {{ event.rank.country }} place in country ranking</li>
-                                </div>
-                            </ul>
-                        </li>
+                <li v-for="event in ranksObj">
+                    <p>{{ eventsObj[event.single.eventId] }}:</p>
+                    <ul>
+                        <li>Your best single is: {{ formatTime(event.single.best) }}. Your best solve is in {{ event.single.rank.world }} place in world rankings, in {{ event.single.rank.continent }} place in continental ranking, in {{ event.single.rank.country }} place in country ranking.</li>
+                        <li v-if="event.avg">Your best average is: {{ formatTime(event.avg.best) }}. Your best solve is in {{ event.avg.rank.world }} place in world rankings, in {{ event.avg.rank.continent }} place in continental ranking, in {{ event.avg.rank.country }} place in country ranking.</li>
                     </ul>
                 </li>
             </ul>
@@ -136,11 +90,12 @@ export default defineComponent({
         let compsShow = ref(true);
         let rankingsShow = ref(true);
         let resultsShow = ref(true);
-
+        
         //* vars
         const wcaId = ref('2007HESS01')
-        let person = ref({});
+        let person = ref<any>({});
         let isPersonData = ref({bool: false});
+        let ranksObj = ref<any>({})
 
         //* fetch data
         const fetchData = async () => {
@@ -159,6 +114,7 @@ export default defineComponent({
                 }else{
                     person.value = fetchedData;
                     isPersonData.value.bool = true;
+                    changeRankingsObj(person.value.rank)
                 }
                 
             })
@@ -186,13 +142,24 @@ export default defineComponent({
             return finalStr
         }
 
+        function changeRankingsObj(rankObj: any): void{
+            for(let x of rankObj.singles){
+                ranksObj.value[x.eventId] = {};
+                ranksObj.value[x.eventId].single = x;
+            }
+
+            for(let x of rankObj.averages){
+                ranksObj.value[x.eventId].avg = x;
+            }
+        }
+
         return{
             //* display vars
-            compsShow, rankingsShow, resultsShow,
+            compsShow, rankingsShow, resultsShow, ranksObj,
             //* vars
             person, isPersonData, wcaId, eventsObj,
             //* functions
-            displayData, formatTime, formatMultiple, displayTimeArray
+            displayData, formatTime, formatMultiple, displayTimeArray, changeRankingsObj
             //* packages
         }
     }
