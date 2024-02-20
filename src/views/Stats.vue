@@ -14,7 +14,7 @@
     <!--* data -->
     <div v-if="isPersonData.bool" class="mt-5">
         <!--* header -->
-        <p class="display-5">{{ person.name }} - <a :href="`https://www.worldcubeassociation.org/persons/${person.id}`" target="_blank" class="text-dark">{{ person.id }}</a></p>
+        <p class="display-5">{{ person.name }} - <a :href="`https://www.worldcubeassociation.or g/persons/${person.id}`" target="_blank" class="text-dark">{{ person.id }}</a></p>
 
         <!--* comps someone took part in -->
         <div>
@@ -51,6 +51,11 @@
                                     <li>Your best single is: {{ formatTime(event.best, "new-mbf") }}</li>
                                     <li>Your best solve is in {{ event.rank.world }} place in world rankings, in {{ event.rank.continent }} place in continental ranking, in {{ event.rank.country }} place in country ranking</li>
                                 </div>
+                                <!--* old-mbf -->
+                                <div v-else-if="eventsObj[event.eventId] === 'Multi-blind (old)'">
+                                    <li>Your best single is: {{ formatTime(event.best, "old-mbf") }}. {{ event.best }}. 22/30 4:24:11</li>
+                                    <li>Your best solve is in {{ event.rank.world }} place in world rankings, in {{ event.rank.continent }} place in continental ranking, in {{ event.rank.country }} place in country ranking</li>
+                                </div>
                                 <!--* other -->
                                 <div v-else>
                                     <li>Your best single is: {{ formatTime(event.best) }}</li>
@@ -65,7 +70,7 @@
                                     <li>Your best solve is in {{ event.rank.world }} place in world rankings, in {{ event.rank.continent }} place in continental ranking, in {{ event.rank.country }} place in country ranking</li>
                                 </div>
                                 <!--* new-mbf -->
-                                <div v-else-if="eventsObj[event.eventId] === 'Multi-blind (new)'"></div>
+                                <div v-else-if="eventsObj[event.eventId] === 'Multi-blind (new)' || eventsObj[event.eventId] === 'Multi-blind (old)'"></div>
                                 <!--* other -->
                                 <div v-else>
                                     <li>Your best average is: {{ formatTime(event.best) }}</li>
@@ -101,7 +106,7 @@
                                     </div>
                                     <!--* mbf old -->
                                     <div v-else-if="eventsObj[eventKey] === 'Multi-blind (old)'">
-                                        <p class="fs-5 lead">{{ round }}</p>
+                                        <p class="fs-5 lead">In the {{ round.round }} your solves were: {{ displayTimeArray(round.solves, 'old-mbf') }}. You were in {{ round.position }} position on the leaderboards. Your best solve was {{ formatTime(round.best, 'old-mbf') }}</p>
                                     </div>
                                     <!--* other ones -->
                                     <div v-else>
@@ -133,7 +138,7 @@ export default defineComponent({
         let resultsShow = ref(true);
 
         //* vars
-        const wcaId = ref('2022AREZ01')
+        const wcaId = ref('2007HESS01')
         let person = ref({});
         let isPersonData = ref({bool: false});
 

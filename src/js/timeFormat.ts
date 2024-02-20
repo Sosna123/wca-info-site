@@ -69,6 +69,44 @@ function formatNewMbf(time: string): string{
     return result
 }
 
+//* new multiblind
+function formatOldMbf(time: string): string{
+    //*  1SSAATTTTT
+    //*  solved        = 99 - SS
+    //*  attempted     = AA
+    //*  timeInSeconds = TTTTT (99999 means unknown)
+
+    let hours: number, minutes: number, seconds: number
+    let minutesStr: string, secondsStr: string
+    let timeToSolve: number, solved: number, attempted: number
+    let result: string
+
+    let timeArr: string[] = time.split('')
+    timeToSolve = timeArr.length === 10 ? Number(`${timeArr[5]}${timeArr[6]}${timeArr[7]}${timeArr[8]}${timeArr[9]}`) : Number(`${timeArr[2]}${timeArr[3]}${timeArr[4]}${timeArr[5]}${timeArr[6]}`);
+    
+    solved = timeArr.length === 10 ? 99 - Number(`${timeArr[1]}${timeArr[2]}`) : 99 - Number(`${timeArr[0]}${timeArr[1]}`)
+    
+    attempted = timeArr.length === 10 ? Number(`${timeArr[3]}${timeArr[4]}`) : Number(`${timeArr[2]}${timeArr[3]}`)
+    
+    if(timeToSolve === 9999){
+        result = `${solved}/${attempted} in unknown time`
+        return result
+    }
+    hours = timeToSolve >= 3600 ? Math.trunc(timeToSolve / 3600) : 0;
+    
+    minutes = timeToSolve >= 3600 ? Math.trunc((timeToSolve - (hours * 3600)) / 60) : Math.trunc(timeToSolve / 60);
+    minutesStr = minutes.toString().length === 1 ? `0` + minutes.toString(): minutes.toString()
+    
+    seconds = timeToSolve >= 3600 ? Math.trunc(timeToSolve - ((hours * 3600) + (minutes *60))) : timeToSolve - minutes * 60;
+    secondsStr = seconds.toString().length === 1 ? `0` + seconds.toString() : seconds.toString()
+    
+    
+    result = timeToSolve >= 3600 ? `${solved}/${attempted} ${hours}:${minutesStr}:${secondsStr}` : `${solved}/${attempted} ${minutesStr}:${secondsStr}`
+    
+    console.log(`time: ${time}; solved: ${solved}; attempted: ${attempted}`)
+    return result
+}
+
 //* check which function to use
 function formatTime(time: number|string, type: EventType = 'normal'): string{
     time = time.toString()
@@ -88,18 +126,20 @@ function formatTime(time: number|string, type: EventType = 'normal'): string{
     if(type === 'normal'){
         return formatNormal(time)
     }
-
     //* fmc
     if(type === 'fmc'){
         return time;
     }
-
     //* new mbf
     if(type === 'new-mbf'){
         return formatNewMbf(time)
     }
+    //* old mbf
+    if(type === 'old-mbf'){
+        return formatOldMbf(time)
+    }
 
-    return 'd'
+    return ''
 }
 
 export default formatTime
