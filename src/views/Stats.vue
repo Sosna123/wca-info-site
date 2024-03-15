@@ -14,7 +14,7 @@
     <!--* data -->
     <div v-if="isPersonData.bool" class="mt-5">
         <!--* header -->
-        <p class="display-5">{{ person.name }} - <a :href="`https://www.worldcubeassociation.or g/persons/${person.id}`" target="_blank" class="text-dark">{{ person.id }}</a></p>
+        <p class="display-5">{{ person.name }} - <a :href="`https://www.worldcubeassociation.org/persons/${person.id}`" target="_blank" class="text-dark">{{ person.id }}</a></p>
 
         <!--* comps someone took part in -->
         <div>
@@ -30,7 +30,12 @@
                 <li v-for="event in ranksObj">
                     <p>{{ eventsObj[event.single.eventId] }}:</p>
                     <ul>
-                        <li>Your best single is: {{ formatTime(event.single.best) }}. Your best solve is in {{ event.single.rank.world }} place in world rankings, in {{ event.single.rank.continent }} place in continental ranking, in {{ event.single.rank.country }} place in country ranking.</li>
+                        <!-- !signle -->
+                        <li v-if="eventsObj[event.single.eventId] === 'Fewest moves challenge'">Your best single is: {{ formatTime(event.single.best, 'fmc') }}. Your best solve is in {{ event.single.rank.world }} place in world rankings, in {{ event.single.rank.continent }} place in continental ranking, in {{ event.single.rank.country }} place in country ranking.</li>
+                        <li v-else-if="eventsObj[event.single.eventId] === 'Multi-blind (new)'">Your best single is: {{ formatTime(event.single.best, 'new-mbf') }}. Your best solve is in {{ event.single.rank.world }} place in world rankings, in {{ event.single.rank.continent }} place in continental ranking, in {{ event.single.rank.country }} place in country ranking.</li>
+                        <li v-else-if="eventsObj[event.single.eventId] === 'Multi-blind (old)'">Your best single is: {{ formatTime(event.single.best, 'old-mbf') }}. Your best solve is in {{ event.single.rank.world }} place in world rankings, in {{ event.single.rank.continent }} place in continental ranking, in {{ event.single.rank.country }} place in country ranking.</li>
+                        <li v-else>Your best single is: {{ formatTime(event.single.best) }}. Your best solve is in {{ event.single.rank.world }} place in world rankings, in {{ event.single.rank.continent }} place in continental ranking, in {{ event.single.rank.country }} place in country ranking.</li>
+                        <!-- !average -->
                         <li v-if="event.avg">Your best average is: {{ formatTime(event.avg.best) }}. Your best solve is in {{ event.avg.rank.world }} place in world rankings, in {{ event.avg.rank.continent }} place in continental ranking, in {{ event.avg.rank.country }} place in country ranking.</li>
                     </ul>
                 </li>
@@ -81,7 +86,7 @@
 import { defineComponent, ref } from 'vue';
 import eventsObj from '../js/events'
 import formatTime from '../js/timeFormat'
-import EventType from '../js/types'
+import { EventType } from '../js/types'
 
 export default defineComponent({
     name: 'stats',
@@ -128,6 +133,9 @@ export default defineComponent({
             for(let time of times){
                 results.push(formatTime(time, type))
             }
+
+            results = results.filter((value) => value != 'false')
+            console.log(results)
             
             return results
         }
@@ -143,6 +151,8 @@ export default defineComponent({
         }
 
         function changeRankingsObj(rankObj: any): void{
+            ranksObj.value = {}
+
             for(let x of rankObj.singles){
                 ranksObj.value[x.eventId] = {};
                 ranksObj.value[x.eventId].single = x;
@@ -168,4 +178,4 @@ export default defineComponent({
 
 <style>
 
-</style>../js/countries
+</style>

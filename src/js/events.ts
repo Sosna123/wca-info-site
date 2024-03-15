@@ -21,6 +21,5 @@ const eventsObj = {
     "skewb": "Skweb" as string,
     "sq1": "Square-1" as string
 }
-// "sq1": 'Square-1' 
 
 export default eventsObj

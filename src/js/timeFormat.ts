@@ -1,28 +1,30 @@
-import EventType from '../js/types'
+import {EventType} from '../js/types'
 
 //* normal times
 function formatNormal(time: string): string{
     let result: string;
 
     //* Actual time formatting
-    if(time.length === 6){
-        result = `${time[0]}${time[1]}:${time[2]}${time[3]}.${time[4]}${time[5]}` 
+    let timeNum: number = Number(time)
+
+    let minutes: number = Math.trunc(timeNum / 6000);
+    let seconds: number = Math.trunc((timeNum - (minutes * 6000)) / 100);
+    let centiseconds: number = Math.trunc(timeNum - ((minutes * 6000) + (seconds * 100)))
+
+    //* conversion from number to string
+    let secondsStr: string = seconds.toString();
+    let centisecondsStr: string = centiseconds.toString();
+
+    //* adding 0 in front of 1 digit numbers
+    if(secondsStr.length == 1 && minutes){
+        secondsStr = "0" + secondsStr
     }
-    else if(time.length === 5){
-        result = `${time[0]}:${time[1]}${time[2]}.${time[3]}${time[4]}` 
+    if(centisecondsStr.length == 1){
+        centisecondsStr = "0" + centisecondsStr
     }
-    else if(time.length === 4){
-        result = `${time[0]}${time[1]}.${time[2]}${time[3]}` 
-    }
-    else if(time.length === 3){
-        result = `${time[0]}.${time[1]}${time[2]}` 
-    }
-    else if(time.length === 2){
-        result = `0.${time[0]}${time[1]}`
-    }
-    else{
-        result = time
-    }
+
+    //* returning correct-looking result
+    result = minutes ? `${minutes}:${secondsStr}.${centisecondsStr}` : `${secondsStr}.${centisecondsStr}`
 
     return result;
 }
@@ -119,7 +121,7 @@ function formatTime(time: number|string, type: EventType = 'normal'): string{
         return 'DNF'
     }
     if(time === "0"){
-        return ''
+        return 'false'
     }
 
     //* normal type
