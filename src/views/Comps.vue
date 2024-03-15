@@ -13,10 +13,12 @@
                 <button @click="displayData" class="btn btn-outline-success">Search for competitions</button>
             </div>
         </div>
+
         <!--* alert -->
         <div v-if="fData.length === 0">
             <p class="lead alert alert-info mt-5" role="alert">There is no competitions for now...</p>
         </div>
+
         <!--* comps -->
         <ul v-else class="list-group list-group-flush mt-5">
             <li v-for="comp in fData" class="list-group-item">

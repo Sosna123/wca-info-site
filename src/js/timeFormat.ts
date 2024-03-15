@@ -71,7 +71,7 @@ function formatNewMbf(time: string): string{
     return result
 }
 
-//* new multiblind
+//* old multiblind
 function formatOldMbf(time: string): string{
     //*  1SSAATTTTT
     //*  solved        = 99 - SS
@@ -106,7 +106,8 @@ function formatOldMbf(time: string): string{
     result = timeToSolve >= 3600 ? `${solved}/${attempted} ${hours}:${minutesStr}:${secondsStr}` : `${solved}/${attempted} ${minutesStr}:${secondsStr}`
     
     console.log(`time: ${time}; solved: ${solved}; attempted: ${attempted}`)
-    return result
+    return time
+    // return result
 }
 
 //* check which function to use
