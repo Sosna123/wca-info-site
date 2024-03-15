@@ -23,7 +23,7 @@
                 <a :href="`https://www.worldcubeassociation.org/competitions/${comp.id}`" target="_blank">
                     <p class="display-6 text-dark d-inline-block me-2 text-decoration-underline ">{{ comp.name }}</p>
                 </a>
-                <p class="text-dark d-inline-block lead fs-4">will be in {{ comp.city }} at {{ comp.venue.address }}</p>
+                <p class="text-dark d-inline-block lead fs-4">will be in {{ comp.city }} at {{ comp.venue.address }}. It will happen between {{ moment(comp.date.from).format("Do MMMM YYYY") }} and {{ moment(comp.date.till).format("Do MMMM YYYY") /* 14th September 2024 */ }}</p>
             </li>
         </ul>
     </div>
@@ -105,4 +105,4 @@ export default defineComponent({
 
 <style>
 
-</style>../js/countries
+</style>
