@@ -13,13 +13,13 @@ const eventsObj = {
     "555bf": "5x5 blindfolded" as string,
     "666": "6x6" as string,
     "777": "7x7" as string,
-    "clock": "Clock" as string,
-    "magic": "Rubik's magic" as string,
-    "mmagic": "Master magic" as string,
-    "minx": "Megaminx" as string,
-    "pyram": "Pyraminx" as string,
-    "skewb": "Skweb" as string,
-    "sq1": "Square-1" as string
-}
+    clock: "Clock" as string,
+    magic: "Rubik's magic" as string,
+    mmagic: "Master magic" as string,
+    minx: "Megaminx" as string,
+    pyram: "Pyraminx" as string,
+    skewb: "Skweb" as string,
+    sq1: "Square-1" as string,
+};
 
-export default eventsObj
+export default eventsObj;
